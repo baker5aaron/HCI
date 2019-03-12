@@ -1,4 +1,4 @@
-import java.awt.BorderLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -33,6 +33,7 @@ public class PhotoViewer {
 		springLayout.putConstraint(SpringLayout.WEST, scrollPane, 59, SpringLayout.WEST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, 427, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, scrollPane, 624, SpringLayout.WEST, frame.getContentPane());
+		@SuppressWarnings("unused")
 		File imgFile;
 
 		final JButton open = new JButton("Open");
