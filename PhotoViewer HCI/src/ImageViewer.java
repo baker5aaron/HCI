@@ -51,9 +51,11 @@ public class ImageViewer {
 		mnFile.add(mntmNewImageFile);
 		
 		JMenuItem mntmPreviousImage = new JMenuItem("Previous Image");
+		mntmPreviousImage.setMaximumSize(new Dimension(100,50));
 		menuBar.add(mntmPreviousImage);
 		
 		JMenuItem mntmNextImage = new JMenuItem("Next Image");
+		mntmNextImage.setMaximumSize(new Dimension(100,50));
 		menuBar.add(mntmNextImage);
 		
 		frame.setVisible(true);
