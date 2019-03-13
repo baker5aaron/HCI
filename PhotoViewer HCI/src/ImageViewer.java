@@ -19,17 +19,52 @@ import javax.swing.JMenuItem;
 import net.miginfocom.swing.MigLayout;
 import java.awt.Dimension;
 
-private class ViewerActionListener implements ActionListener {
+class ViewerActionListener implements ActionListener {
 	private int i;
+	private File f;
+	private File[] fileList;
 	
-	public ViewerActionListener(int i) {
+	public ViewerActionListener(int i, File f, File[] files) {
+		this.setIter(i);
+		this.setFile(f);
+		this.setFileList(files);
+	}
+
+	
+	public void actionPerformed(ActionEvent e) {
+		setIter(i);
+		setFile(f);
+		setFileList(fileList);
+	}
+
+
+	public File[] getFileList() {
+		return fileList;
+	}
+
+
+	public void setFileList(File[] fileList) {
+		this.fileList = fileList;
+	}
+
+
+	public int getIter() {
+		return i;
+	}
+
+
+	public void setIter(int i) {
 		this.i = i;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		
+
+	public File getFile() {
+		return f;
+	}
+
+
+	public void setFile(File f) {
+		this.f = f;
 	}
 	
 }
@@ -47,6 +82,7 @@ public class ImageViewer {
 		frame.getContentPane().add(scrollPane, "cell 0 0 14 8,grow");
 				
 		JButton btnPrevious = new JButton("Previous");
+		
 		frame.getContentPane().add(btnPrevious, "cell 0 8");
 		
 		JButton btnChooseImage = new JButton("Choose Image");
@@ -67,22 +103,22 @@ public class ImageViewer {
 		int result = picker.showOpenDialog(frame);
 		
 		BufferedImage img;
-		File[] files;
+		File[] fileList;
 		int i = 0;
-		File f = picker.getSelectedFile();
+		File file = picker.getSelectedFile();
 		
 		
 		
 		if (result == JFileChooser.APPROVE_OPTION) {
-			JOptionPane.showMessageDialog(frame, f.getAbsolutePath(), "Selection",
+			JOptionPane.showMessageDialog(frame, file.getAbsolutePath(), "Selection",
 					JOptionPane.INFORMATION_MESSAGE);
-			files = f.listFiles();
-			System.out.println(files[i].getAbsolutePath());
+			fileList = file.listFiles();
+			System.out.println(fileList[i].getAbsolutePath());
 			try {
-				while( !(files[i].isFile()) )
+				while( !(fileList[i].isFile()) )
 					i++;
-				System.out.println(files[i].getAbsolutePath());
-				img = ImageIO.read(new File(files[i].getAbsolutePath()));
+				System.out.println(fileList[i].getAbsolutePath());
+				img = ImageIO.read(new File(fileList[i].getAbsolutePath()));
 				imgLabel.setIcon(new ImageIcon(img));
 			} catch (IOException e2) {
 			
@@ -91,29 +127,27 @@ public class ImageViewer {
 		}
 		
 		JMenuItem mntmNewParentFile = new JMenuItem("New Parent Folder");
-		mntmNewParentFile.addActionListener(new ActionListener() {
+		mntmNewParentFile.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser picker = new JFileChooser();
 				picker.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int result = picker.showOpenDialog(frame);
 				
 				BufferedImage img;
-				File[] files;
-				int i = 0;
-				File f = picker.getSelectedFile();
+				setIter(0);
+				file = picker.getSelectedFile();
 				
 				
 				
 				if (result == JFileChooser.APPROVE_OPTION) {
-					JOptionPane.showMessageDialog(frame, f.getAbsolutePath(), "Selection",
+					JOptionPane.showMessageDialog(frame, file.getAbsolutePath(), "Selection",
 							JOptionPane.INFORMATION_MESSAGE);
-					files = f.listFiles();
-					System.out.println(files[i].getAbsolutePath());
+					fileList = file.listFiles();
+					System.out.println(fileList[getIter()].getAbsolutePath());
 					try {
-						while( !(files[i].isFile()) )
-							i++;
-						System.out.println(files[i].getAbsolutePath());
-						img = ImageIO.read(new File(files[i].getAbsolutePath()));
+						while( !(fileList[getIter()].isFile()) )
+							setIter(getIter() + 1);
+						img = ImageIO.read(new File(fileList[getIter()].getAbsolutePath()));
 						imgLabel.setIcon(new ImageIcon(img));
 					} catch (IOException e2) {
 					
@@ -130,39 +164,16 @@ public class ImageViewer {
 		mnFile.add(mntmNewImageFile);
 		
 		JMenuItem mntmPreviousImage = new JMenuItem("Previous Image");
+		
 		mntmPreviousImage.setMaximumSize(new Dimension(100,50));
 		menuBar.add(mntmPreviousImage);
 		
 		JMenuItem mntmNextImage = new JMenuItem("Next Image");
+		
 		mntmNextImage.setMaximumSize(new Dimension(100,50));
-		//mntmNextImage.add(files);
 		menuBar.add(mntmNextImage);
 		
-		
-		mntmNewParentFile.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				
-				final JFileChooser chooser = new JFileChooser();
-				final int result = chooser.showOpenDialog(frame);
-				
-				if (result == JFileChooser.APPROVE_OPTION) {
-					final File f = chooser.getSelectedFile();
-					JOptionPane.showMessageDialog(frame, f.getAbsolutePath(), "Selection",
-							JOptionPane.INFORMATION_MESSAGE);
-					//files = f.getParentFile().listFiles();
-					
-					try {
-						BufferedImage img = ImageIO.read(new File(f.getAbsolutePath()));
-						imgLabel.setIcon(new ImageIcon(img));
-						
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-		
-		btnChooseImage.addActionListener(new ActionListener() {
+		btnChooseImage.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(final ActionEvent e) {
 				
 				final JFileChooser chooser = new JFileChooser();
@@ -184,7 +195,7 @@ public class ImageViewer {
 			}
 		});
 		
-		mntmNewImageFile.addActionListener(new ActionListener() {
+		mntmNewImageFile.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent e) {
 				
 				final JFileChooser chooser = new JFileChooser();
@@ -205,6 +216,28 @@ public class ImageViewer {
 				}
 			}
 		});
+		
+		mntmPreviousImage.addActionListener(new ViewerActionListener(i, file, fileList) {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		mntmNextImage.addActionListener(new ViewerActionListener(i, file, fileList) {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		btnPrevious.addActionListener(new ViewerActionListener(i, file, fileList) {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		btnNext.addActionListener(new ViewerActionListener(i, file, fileList) {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
 		
 		frame.setVisible(true);
 
