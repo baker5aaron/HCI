@@ -113,7 +113,6 @@ public class ImageViewer {
 			JOptionPane.showMessageDialog(frame, file.getAbsolutePath(), "Selection",
 					JOptionPane.INFORMATION_MESSAGE);
 			fileList = file.listFiles();
-			System.out.println(fileList[i].getAbsolutePath());
 			try {
 				while( !(fileList[i].isFile()) )
 					i++;
@@ -136,6 +135,7 @@ public class ImageViewer {
 				BufferedImage img;
 				setIter(0);
 				setFile(picker.getSelectedFile());
+				setFileList(picker.getSelectedFile().listFiles());
 				
 				
 				
@@ -183,7 +183,8 @@ public class ImageViewer {
 					final File f = chooser.getSelectedFile();
 					JOptionPane.showMessageDialog(frame, f.getAbsolutePath(), "Selection",
 							JOptionPane.INFORMATION_MESSAGE);
-					
+					setFile(picker.getSelectedFile());
+					setFileList(picker.getSelectedFile().listFiles());
 					for(int x = 0; x < getFileList().length; x++)
 						if(getFile().equals(getFileList()[x]))
 							setIter(x);
@@ -230,9 +231,9 @@ public class ImageViewer {
 			public void actionPerformed(ActionEvent e) {
 				
 				BufferedImage img;
-				
+				setIter(getIter()-1);
 				try {
-					while( !(getFileList()[getIter()].isFile()) ) {
+					while( !(getFileList()[getIter()].isFile()) || ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath())) == null ) {
 						setIter(getIter() - 1);
 						if(getIter() < 0)
 							setIter(getFileList().length);
@@ -250,9 +251,9 @@ public class ImageViewer {
 		mntmNextImage.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent e) {
 				BufferedImage img;
-				
+				setIter(getIter()+1);
 				try {
-					while( !(getFileList()[getIter()].isFile()) ) {
+					while( !(getFileList()[getIter()].isFile()) || ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath())) == null ) {
 						setIter(getIter() + 1);
 						if(getIter() == getFileList().length)
 							setIter(0);
@@ -271,13 +272,15 @@ public class ImageViewer {
 			public void actionPerformed(ActionEvent e) {
 				
 				BufferedImage img;
-				
+				setIter(getIter()-1);
+				if (getIter() < 0)
+					setIter(getFileList().length - 1);
 				try {
-					while( !(getFileList()[getIter()].isFile()) ) {
+					while( !(getFileList()[getIter()].isFile()) || ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath())) == null ) {
 						setIter(getIter() - 1);
 						if(getIter() < 0)
 							setIter(getFileList().length - 1);
-					}
+						}
 					
 					img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
 					imgLabel.setIcon(new ImageIcon(img));
@@ -292,9 +295,9 @@ public class ImageViewer {
 			public void actionPerformed(ActionEvent e) {
 				
 				BufferedImage img;
-				
+				setIter(getIter()+1);
 				try {
-					while( !(getFileList()[getIter()].isFile()) ) {
+					while( !(getFileList()[getIter()].isFile()) || ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath())) == null ) {
 						setIter(getIter() + 1);
 						if(getIter() == getFileList().length)
 							setIter(0);
