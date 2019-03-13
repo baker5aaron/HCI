@@ -103,7 +103,7 @@ public class ImageViewer {
 		int result = picker.showOpenDialog(frame);
 		
 		BufferedImage img;
-		File[] fileList;
+		File[] fileList = null;
 		int i = 0;
 		File file = picker.getSelectedFile();
 		
@@ -135,19 +135,19 @@ public class ImageViewer {
 				
 				BufferedImage img;
 				setIter(0);
-				file = picker.getSelectedFile();
+				setFile(picker.getSelectedFile());
 				
 				
 				
 				if (result == JFileChooser.APPROVE_OPTION) {
 					JOptionPane.showMessageDialog(frame, file.getAbsolutePath(), "Selection",
 							JOptionPane.INFORMATION_MESSAGE);
-					fileList = file.listFiles();
-					System.out.println(fileList[getIter()].getAbsolutePath());
+					setFileList(file.listFiles());
+					System.out.println(getFileList()[getIter()].getAbsolutePath());
 					try {
-						while( !(fileList[getIter()].isFile()) )
+						while( !(getFileList()[getIter()].isFile()) )
 							setIter(getIter() + 1);
-						img = ImageIO.read(new File(fileList[getIter()].getAbsolutePath()));
+						img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
 						imgLabel.setIcon(new ImageIcon(img));
 					} catch (IOException e2) {
 					
@@ -219,21 +219,84 @@ public class ImageViewer {
 		
 		mntmPreviousImage.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent e) {
+				
+				BufferedImage img;
+				
+				try {
+					while( !(getFileList()[getIter()].isFile()) ) {
+						setIter(getIter() - 1);
+						if(getIter() < 0)
+							setIter(getFileList().length);
+					}
+					
+					img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
+					imgLabel.setIcon(new ImageIcon(img));
+				} catch (IOException e2) {
+				
+					e2.printStackTrace();
+				}
 			}
 		});
 		
 		mntmNextImage.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent e) {
+				BufferedImage img;
+				
+				try {
+					while( !(getFileList()[getIter()].isFile()) ) {
+						setIter(getIter() + 1);
+						if(getIter() > getFileList().length)
+							setIter(0);
+					}
+					
+					img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
+					imgLabel.setIcon(new ImageIcon(img));
+				} catch (IOException e2) {
+				
+					e2.printStackTrace();
+				}
 			}
 		});
 		
 		btnPrevious.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent e) {
+				
+				BufferedImage img;
+				
+				try {
+					while( !(getFileList()[getIter()].isFile()) ) {
+						setIter(getIter() - 1);
+						if(getIter() < 0)
+							setIter(getFileList().length);
+					}
+					
+					img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
+					imgLabel.setIcon(new ImageIcon(img));
+				} catch (IOException e2) {
+				
+					e2.printStackTrace();
+				}
 			}
 		});
 		
 		btnNext.addActionListener(new ViewerActionListener(i, file, fileList) {
 			public void actionPerformed(ActionEvent e) {
+				
+				BufferedImage img;
+				
+				try {
+					while( !(getFileList()[getIter()].isFile()) ) {
+						setIter(getIter() + 1);
+						if(getIter() > getFileList().length)
+							setIter(0);
+					}
+					
+					img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
+					imgLabel.setIcon(new ImageIcon(img));
+				} catch (IOException e2) {
+				
+					e2.printStackTrace();
+				}
 				
 			}
 		});
