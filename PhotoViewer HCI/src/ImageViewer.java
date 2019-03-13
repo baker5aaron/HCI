@@ -184,6 +184,10 @@ public class ImageViewer {
 					JOptionPane.showMessageDialog(frame, f.getAbsolutePath(), "Selection",
 							JOptionPane.INFORMATION_MESSAGE);
 					
+					for(int x = 0; x < getFileList().length; x++)
+						if(getFile().equals(getFileList()[x]))
+							setIter(x);
+					
 					try {
 						BufferedImage img = ImageIO.read(new File(f.getAbsolutePath()));
 						imgLabel.setIcon(new ImageIcon(img));
@@ -203,6 +207,11 @@ public class ImageViewer {
 				
 				if (result == JFileChooser.APPROVE_OPTION) {
 					final File f = chooser.getSelectedFile();
+					setFileList(f.listFiles());
+					setFile(f);
+					for(int x = 0; x < getFileList().length; x++)
+						if(getFile().equals(getFileList()[x]))
+							setIter(x);
 					JOptionPane.showMessageDialog(frame, f.getAbsolutePath(), "Selection",
 							JOptionPane.INFORMATION_MESSAGE);
 					
@@ -245,7 +254,7 @@ public class ImageViewer {
 				try {
 					while( !(getFileList()[getIter()].isFile()) ) {
 						setIter(getIter() + 1);
-						if(getIter() > getFileList().length)
+						if(getIter() == getFileList().length)
 							setIter(0);
 					}
 					
@@ -267,7 +276,7 @@ public class ImageViewer {
 					while( !(getFileList()[getIter()].isFile()) ) {
 						setIter(getIter() - 1);
 						if(getIter() < 0)
-							setIter(getFileList().length);
+							setIter(getFileList().length - 1);
 					}
 					
 					img = ImageIO.read(new File(getFileList()[getIter()].getAbsolutePath()));
@@ -287,7 +296,7 @@ public class ImageViewer {
 				try {
 					while( !(getFileList()[getIter()].isFile()) ) {
 						setIter(getIter() + 1);
-						if(getIter() > getFileList().length)
+						if(getIter() == getFileList().length)
 							setIter(0);
 					}
 					
